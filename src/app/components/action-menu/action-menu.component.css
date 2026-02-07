@@ -1,11 +1,52 @@
-button[mat-icon-button] {
-  color: #566273;
+.action-menu {
+  position: relative;
+  display: inline-block;
 }
 
-button[mat-menu-item] mat-icon {
+.icon-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
   color: #566273;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
 }
 
-button[mat-menu-item]:hover {
+.icon-button:hover {
   background: #f5f7fb;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  min-width: 140px;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 6px 0;
+  z-index: 10;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #566273;
+  font: inherit;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f5f7fb;
+}
+
+.menu-item.danger {
+  color: #d14343;
 }

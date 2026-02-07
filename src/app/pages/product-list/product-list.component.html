@@ -16,95 +16,111 @@
       <button class="btn-primary" (click)="goToProductDetail()">Agregar</button>
     </div>
 
-    <div *ngIf="vm().error" class="alert">
-      {{ vm().error }}
-      <button class="ghost" (click)="onRetry()">Reintentar</button>
-    </div>
-    <div *ngIf="deleteError()" class="alert">
-      {{ deleteError() }}
-    </div>
+    @if (vm().error) {
+      <div class="alert">
+        {{ vm().error }}
+        <button class="ghost" (click)="onRetry()">Reintentar</button>
+      </div>
+    }
 
-    <div class="table-wrapper" *ngIf="vm().loading || vm().total; else emptyState">
-      <table>
-        <thead>
-          <tr>
-            <th>Logo</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Fecha liberación</th>
-            <th>Fecha revisión</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="vm().loading">
-            <td colspan="6">
-              <div class="skeleton-row" *ngFor="let _ of [1,2,3,4,5]"></div>
-            </td>
-          </tr>
-          <tr *ngFor="let product of vm().products">
-            <td>
-              <img [src]="product.logo" [alt]="product.name" class="logo" />
-            </td>
-            <td class="strong">{{ product.name }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.date_release }}</td>
-            <td>{{ product.date_revision }}</td>
-            <td class="actions-cell">
-              <app-action-menu
-                [product]="product"
-                (editProduct)="goToProductDetail($event)"
-                (deleteProduct)="confirmDeleteProduct(product)"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6">
-              <div class="table-footer">
-                <span>{{ vm().total }} Resultados</span>
-                <div class="footer-controls">
-                  <label>
-                    Mostrar
-                    <select
-                      [ngModel]="vm().pageSize"
-                      (ngModelChange)="onPageSizeChange($event)"
-                    >
-                      <option *ngFor="let size of pageSizes" [value]="size">
-                        {{ size }}
-                      </option>
-                    </select>
-                  </label>
+    @if (deleteError()) {
+      <div class="alert">
+        {{ deleteError() }}
+      </div>
+    }
+
+    @if (vm().loading || vm().total) {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Fecha liberación</th>
+              <th>Fecha revisión</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (vm().loading) {
+              <tr>
+                <td colspan="6">
+                  @for (_ of [1, 2, 3, 4, 5]; track $index) {
+                    <div class="skeleton-row"></div>
+                  }
+                </td>
+              </tr>
+            }
+
+            @for (product of vm().products; track product.id) {
+              <tr>
+                <td>
+                  <img [src]="product.logo" [alt]="product.name" class="logo" />
+                </td>
+                <td class="strong">{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.date_release }}</td>
+                <td>{{ product.date_revision }}</td>
+                <td class="actions-cell">
+                  <app-action-menu
+                    [product]="product"
+                    (editProduct)="goToProductDetail($event)"
+                    (deleteProduct)="confirmDeleteProduct(product)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6">
+                <div class="table-footer">
+                  <span>{{ vm().total }} Resultados</span>
+                  <div class="footer-controls">
+                    <label>
+                      Mostrar
+                      <select
+                        [ngModel]="vm().pageSize"
+                        (ngModelChange)="onPageSizeChange($event)"
+                      >
+                        @for (size of pageSizes; track size) {
+                          <option [value]="size">
+                            {{ size }}
+                          </option>
+                        }
+                      </select>
+                    </label>
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    } @else {
+      <div class="empty">
+        <p>Sin productos</p>
+        <button class="btn-primary" (click)="goToProductDetail()">Agregar</button>
+      </div>
+    }
   </section>
 </div>
 
-<ng-template #emptyState>
-  <div class="empty">
-    <p>Sin productos</p>
-      <button class="btn-primary" (click)="goToProductDetail()">Agregar</button>
-  </div>
-</ng-template>
-
-<div *ngIf="isModalVisible()" class="modal">
-  <div class="modal__panel">
-    <div class="modal__body">
-      <h3>Eliminar producto</h3>
-      <p>
-        ¿Estas seguro de eliminar el producto
-        <strong>{{ productToDelete()?.name }}</strong>?
-      </p>
-    </div>
-    <div class="modal__footer">
-      <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
-      <button class="btn-primary" (click)="confirmDelete()">Eliminar</button>
+@if (isModalVisible()) {
+  <div class="modal">
+    <div class="modal__panel">
+      <div class="modal__body">
+        <h3>Eliminar producto</h3>
+        <p>
+          ¿Estas seguro de eliminar el producto
+          <strong>{{ productToDelete()?.name }}</strong>?
+        </p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="confirmDelete()">Eliminar</button>
+      </div>
     </div>
   </div>
-</div>
+}

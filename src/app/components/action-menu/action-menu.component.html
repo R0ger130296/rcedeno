@@ -1,13 +1,23 @@
-<button mat-icon-button [matMenuTriggerFor]="menu">
-  <mat-icon>more_vert</mat-icon>
-</button>
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="edit()">
-    <mat-icon>edit</mat-icon>
-    <span>Editar</span>
+<div class="action-menu" (click)="$event.stopPropagation()">
+  <button
+    type="button"
+    class="icon-button"
+    (click)="toggleMenu($event)"
+    [attr.aria-expanded]="isOpen"
+    aria-haspopup="true"
+    aria-label="Abrir menú de acciones"
+  >
+    ⋮
   </button>
-  <button mat-menu-item (click)="delete()">
-    <mat-icon>delete</mat-icon>
-    <span>Eliminar</span>
-  </button>
-</mat-menu>
+
+  @if (isOpen) {
+    <div class="menu">
+      <button type="button" class="menu-item" (click)="edit()">
+        Editar
+      </button>
+      <button type="button" class="menu-item danger" (click)="delete()">
+        Eliminar
+      </button>
+    </div>
+  }
+</div>

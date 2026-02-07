@@ -10,8 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { ActionMenuComponent } from '../../components/action-menu/action-menu.component';
 import { ProductDTO } from '../../models/product.dto';
 import { ProductService } from '../../services/product.services';
@@ -25,8 +23,6 @@ import { BrandComponent } from '../../components/brand/brand.component';
   imports: [
     CommonModule,
     FormsModule,
-    MatIconModule,
-    MatMenuModule,
     ActionMenuComponent,
     BrandComponent,
   ],

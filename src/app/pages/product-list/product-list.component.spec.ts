@@ -7,8 +7,6 @@ import { ProductDTO } from '../../models/product.dto';
 import { ToastService } from '../../services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { ActionMenuComponent } from '../../components/action-menu/action-menu.component';
 import { BrandComponent } from '../../components/brand/brand.component';
 
@@ -52,8 +50,6 @@ describe('ProductListComponent', () => {
       imports: [
         CommonModule,
         FormsModule,
-        MatIconModule,
-        MatMenuModule,
         ActionMenuComponent,
         BrandComponent,
         ProductListComponent,
