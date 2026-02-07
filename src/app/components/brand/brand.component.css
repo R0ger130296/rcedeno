@@ -1,0 +1,51 @@
+:root {
+  --brand-color: #1c2c5a;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brand-color);
+}
+
+.brand__icon {
+  width: 30px;
+  height: 22px;
+  border: 2px solid var(--brand-color);
+  border-radius: 5px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand__icon::before,
+.brand__icon::after {
+  content: '';
+  position: absolute;
+}
+
+.brand__icon::before {
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  border-bottom: 2px solid var(--brand-color);
+}
+
+.brand__icon::after {
+  top: 5px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border: 2px solid var(--brand-color);
+  border-radius: 50%;
+}
+
+.brand__title {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}

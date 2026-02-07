@@ -1,0 +1,101 @@
+<div class="page">
+  <header class="page__header">
+    <app-brand></app-brand>
+  </header>
+
+  <section class="card">
+    <div class="form-top">
+      <button type="button" class="btn-secondary subtle" (click)="goBack()">
+        ← Regresar
+      </button>
+      <div class="form-title-wrap">
+        <h2 class="form-title">Formulario de Registro</h2>
+      </div>
+    </div>
+    <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()" novalidate>
+      <hr class="divider" />
+
+      <div class="grid">
+        <div class="field" [class.invalid]="isInvalid('name')">
+          <label for="name">Nombre <span class="required">*</span></label>
+          <input id="name" type="text" formControlName="name" />
+          <div class="errors" *ngIf="addProductForm.get('name')?.touched">
+            <span *ngIf="addProductForm.get('name')?.hasError('required')">
+              Campo requerido.
+            </span>
+            <span *ngIf="addProductForm.get('name')?.hasError('minlength')">
+              Mínimo 6 caracteres.
+            </span>
+            <span *ngIf="addProductForm.get('name')?.hasError('maxlength')">
+              Máximo 100 caracteres.
+            </span>
+            <span *ngIf="addProductForm.get('name')?.hasError('startsWithLetter')">
+              Debe iniciar con letra.
+            </span>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="isInvalid('description')">
+          <label for="description">Descripción</label>
+          <input id="description" type="text" formControlName="description" />
+          <div class="errors" *ngIf="addProductForm.get('description')?.touched">
+            <span *ngIf="addProductForm.get('description')?.hasError('required')">
+              Campo requerido.
+            </span>
+            <span *ngIf="addProductForm.get('description')?.hasError('minlength')">
+              Mínimo 10 caracteres.
+            </span>
+            <span *ngIf="addProductForm.get('description')?.hasError('maxlength')">
+              Máximo 200 caracteres.
+            </span>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="isInvalid('logo')">
+          <label for="logo">Logo <span class="required">*</span></label>
+          <input id="logo" type="text" formControlName="logo" />
+          <div class="errors" *ngIf="addProductForm.get('logo')?.touched">
+            <span *ngIf="addProductForm.get('logo')?.hasError('required')">
+              Campo requerido.
+            </span>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="isInvalid('date_release')">
+          <label for="date_release">Fecha de liberación <span class="required">*</span></label>
+          <input id="date_release" type="date" formControlName="date_release" />
+          <div class="errors" *ngIf="addProductForm.get('date_release')?.touched">
+            <span *ngIf="addProductForm.get('date_release')?.hasError('required')">
+              Campo requerido.
+            </span>
+            <span *ngIf="addProductForm.get('date_release')?.hasError('pastDate')">
+              Debe ser hoy o posterior.
+            </span>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="dateRevisionInvalid">
+          <label for="date_revision">Fecha de revisión <span class="required">*</span></label>
+          <input id="date_revision" type="date" formControlName="date_revision" readonly />
+          <div class="errors" *ngIf="dateRevisionInvalid">
+            Debe ser exactamente un año posterior a la liberación.
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-secondary" (click)="goBack()">
+          Regresar
+        </button>
+        <button type="reset" class="btn-secondary" *ngIf="!isEdit()" (click)="resetForm()">
+          Reiniciar
+        </button>
+        <button type="submit" class="btn-primary">
+          {{ isEdit() ? 'Guardar' : 'Enviar' }}
+        </button>
+      </div>
+
+      <p class="submit-error" *ngIf="submitError()">{{ submitError() }}</p>
+    </form>
+  </section>
+</div>
