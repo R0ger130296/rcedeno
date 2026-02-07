@@ -4,7 +4,6 @@ import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-toast-container',
-  standalone: true,
   imports: [CommonModule, NgClass],
   templateUrl: './toast-container.component.html',
   styleUrls: ['./toast-container.component.css'],
