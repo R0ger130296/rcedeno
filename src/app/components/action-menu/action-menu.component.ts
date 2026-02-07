@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  Output,
   HostListener,
+  input,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductDTO } from '../../models/product.dto';
@@ -17,18 +16,18 @@ import { ProductDTO } from '../../models/product.dto';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionMenuComponent {
-  @Input() product!: ProductDTO;
-  @Output() editProduct = new EventEmitter<ProductDTO>();
-  @Output() deleteProduct = new EventEmitter<string>();
+  product = input.required<ProductDTO>();
+  editProduct = output<ProductDTO>();
+  deleteProduct = output<string>();
   isOpen = false;
 
   edit() {
-    this.editProduct.emit(this.product);
+    this.editProduct.emit(this.product());
     this.isOpen = false;
   }
 
   delete() {
-    this.deleteProduct.emit(this.product.id);
+    this.deleteProduct.emit(this.product().id);
     this.isOpen = false;
   }
 
