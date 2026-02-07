@@ -6,18 +6,7 @@ import { ToastService } from '../../services/toast.service';
   selector: 'app-toast-container',
   standalone: true,
   imports: [CommonModule, NgClass],
-  template: `
-    <div class="toast-stack" [ngClass]="position">
-      <div
-        class="toast"
-        *ngFor="let toast of toasts()"
-        [ngClass]="toast.tone"
-        (click)="dismiss(toast.id)"
-      >
-        {{ toast.text }}
-      </div>
-    </div>
-  `,
+  templateUrl: './toast-container.component.html',
   styleUrls: ['./toast-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

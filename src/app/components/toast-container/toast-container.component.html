@@ -1,0 +1,10 @@
+<div class="toast-stack" [ngClass]="position">
+  <div
+    class="toast"
+    *ngFor="let toast of toasts()"
+    [ngClass]="toast.tone"
+    (click)="dismiss(toast.id)"
+  >
+    {{ toast.text }}
+  </div>
+</div>
