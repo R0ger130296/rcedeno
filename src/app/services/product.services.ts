@@ -16,30 +16,35 @@ export class ProductService {
     'Content-Type': 'application/json',
   });
 
+  // Obtener la lista de productos
   getProducts(): Observable<ProductListResponse> {
     return this.http
       .get<ProductListResponse>(this.url, { headers: this.headers })
-      .pipe(delay(500), this.handleError('obtener productos'));
+      .pipe(delay(1000), this.handleError('obtener productos'));
   }
 
+  // Agregar un nuevo producto
   addProduct(product: ProductDTO): Observable<ProductDTO> {
     return this.http
       .post<ProductDTO>(this.url, product, { headers: this.headers })
       .pipe(this.handleError('agregar producto'));
   }
 
+  // Actualizar (editar) un producto existente
   updateProduct(id: string, product: ProductDTO): Observable<ProductDTO> {
     return this.http
       .put<ProductDTO>(`${this.url}/${id}`, product, { headers: this.headers })
       .pipe(this.handleError('actualizar producto'));
   }
 
+  // Eliminar un producto
   deleteProduct(id: string): Observable<any> {
     return this.http
       .delete(`${this.url}/${id}`, { headers: this.headers })
       .pipe(this.handleError('eliminar producto'));
   }
 
+  // Verificar si el ID de producto es válido
   verifyProductId(id: string): Observable<boolean> {
     return this.http
       .get<boolean>(`${this.url}/verification/${id}`, { headers: this.headers })

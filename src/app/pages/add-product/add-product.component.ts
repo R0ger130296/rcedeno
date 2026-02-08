@@ -105,34 +105,16 @@ export class AddProductComponent implements OnInit {
 
     if (routeId) {
       this.isEdit.set(true);
-      this.initFromRoute(routeId, stateProduct);
+      this.initFromRoute(stateProduct);
     }
   }
 
-  private async initFromRoute(id: string, stateProduct?: ProductDTO) {
+  private async initFromRoute(stateProduct?: ProductDTO) {
     if (stateProduct) {
       this.currentId.set(stateProduct.id);
       this.fillForm(stateProduct);
       return;
     }
-
-    this.loading.set(true);
-    this.api.getProducts().subscribe({
-      next: (res) => {
-        const product = res.data?.find((p) => p.id === id);
-        if (!product) {
-          this.router.navigateByUrl('/');
-          return;
-        }
-        this.currentId.set(product.id);
-        this.fillForm(product);
-      },
-      error: () => {
-        this.apiError.set('No se pudo cargar el producto.');
-        this.router.navigateByUrl('/');
-      },
-      complete: () => this.loading.set(false),
-    });
   }
 
   /**
@@ -261,10 +243,10 @@ export class AddProductComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       if (!value) return null;
-      
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const [year, month, day] = value.split('-').map(Number);
       const releaseDate = new Date(year, month - 1, day);
       releaseDate.setHours(0, 0, 0, 0);
