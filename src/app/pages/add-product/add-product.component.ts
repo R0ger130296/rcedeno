@@ -16,6 +16,7 @@ import {
   ValidationErrors,
   FormBuilder,
   ValidatorFn,
+  AsyncValidatorFn,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDTO } from '../../models/product.dto';
@@ -46,10 +47,21 @@ export class AddProductComponent implements OnInit {
 
   addProductForm: FormGroup = this.fb.group(
     {
+      id: new FormControl('', {
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(10),
+          Validators.pattern(/^[a-zA-Z0-9]+$/),
+        ],
+        nonNullable: true,
+        asyncValidators: [this.idExistsValidator()],
+        updateOn: 'blur',
+      }),
       name: new FormControl('', {
         validators: [
           Validators.required,
-          Validators.minLength(6),
+          Validators.minLength(5),
           Validators.maxLength(100),
           this.startsWithLetterValidator(),
         ],
@@ -64,7 +76,7 @@ export class AddProductComponent implements OnInit {
         nonNullable: true,
       }),
       logo: new FormControl('', {
-        validators: [Validators.required],
+        validators: [],
         nonNullable: true,
       }),
       date_release: new FormControl('', {
@@ -128,6 +140,7 @@ export class AddProductComponent implements OnInit {
    */
   private fillForm(product: ProductDTO) {
     this.addProductForm.patchValue({
+      id: product.id,
       name: product.name,
       description: product.description,
       logo: product.logo,
@@ -223,6 +236,16 @@ export class AddProductComponent implements OnInit {
     return `prod-${Math.random().toString(36).slice(2, 10)}`;
   }
 
+  private idExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> => {
+      if (!control.value || this.isEdit()) return Promise.resolve(null);
+
+      return this.api.verifyProductId(control.value).toPromise()
+        .then(exists => exists ? { idExists: true } : null)
+        .catch(() => null);
+    };
+  }
+
   private startsWithLetterValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
@@ -238,10 +261,14 @@ export class AddProductComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       if (!value) return null;
+      
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const release = new Date(value);
-      return release < today ? { pastDate: true } : null;
+      
+      const [year, month, day] = value.split('-').map(Number);
+      const releaseDate = new Date(year, month - 1, day);
+      releaseDate.setHours(0, 0, 0, 0);
+      return releaseDate < today ? { pastDate: true } : null;
     };
   }
 

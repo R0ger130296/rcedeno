@@ -34,14 +34,15 @@
 }
 
 .toast.success {
-  border-color: #cde7b0;
-  background: #f7fff0;
+  border-color: #2e7d32;
+  background: #e8f5e9;
+  color: #1b5e20;
 }
 
 .toast.error {
-  border-color: #f5c2c7;
-  background: #fff5f5;
-  color: #9b1c1c;
+  border-color: #c62828;
+  background: #ffebee;
+  color: #7f1d1d;
 }
 
 .toast.info {

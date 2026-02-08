@@ -3,15 +3,15 @@
     type="button"
     class="icon-button"
     (click)="toggleMenu($event)"
-    [attr.aria-expanded]="isOpen"
+    [attr.aria-expanded]="vm().isOpen"
     aria-haspopup="true"
     aria-label="Abrir menú de acciones"
   >
     ⋮
   </button>
 
-  @if (isOpen) {
-    <div class="menu">
+  @if (vm().isOpen) {
+    <div class="menu" [class.menu-up]="vm().menuPosition === 'up'">
       <button type="button" class="menu-item" (click)="edit()">
         Editar
       </button>

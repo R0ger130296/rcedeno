@@ -32,6 +32,11 @@
   z-index: 10;
 }
 
+.menu-up {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
 .menu-item {
   width: 100%;
   padding: 8px 12px;

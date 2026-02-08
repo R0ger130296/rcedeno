@@ -4,20 +4,41 @@
   </header>
 
   <section class="card">
-    <div class="form-top">
-      <button type="button" class="btn-secondary subtle" (click)="goBack()">
-        ← Regresar
-      </button>
-      <div class="form-title-wrap">
-        <h2 class="form-title">Formulario de Registro</h2>
+      <div class="form-top">
+        <div class="form-title-wrap">
+          <h2 class="form-title">Formulario de Registro</h2>
+        </div>
       </div>
-    </div>
     <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()" novalidate>
       <hr class="divider" />
 
       <div class="grid">
+        <div class="field" [class.invalid]="isInvalid('id')">
+          <label for="id">ID <span class="required" [class.visible]="isInvalid('id')">*</span></label>
+          <input id="id" type="text" formControlName="id" [readonly]="isEdit()" />
+          @if (addProductForm.get('id')?.touched) {
+            <div class="errors">
+              @if (addProductForm.get('id')?.hasError('required')) {
+                <span>Campo requerido.</span>
+              }
+              @if (addProductForm.get('id')?.hasError('minlength')) {
+                <span>Mínimo 3 caracteres.</span>
+              }
+              @if (addProductForm.get('id')?.hasError('maxlength')) {
+                <span>Máximo 10 caracteres.</span>
+              }
+              @if (addProductForm.get('id')?.hasError('pattern')) {
+                <span>Solo letras y números.</span>
+              }
+              @if (addProductForm.get('id')?.hasError('idExists')) {
+                <span>El ID ya existe.</span>
+              }
+            </div>
+          }
+        </div>
+
         <div class="field" [class.invalid]="isInvalid('name')">
-          <label for="name">Nombre <span class="required">*</span></label>
+          <label for="name">Nombre <span class="required" [class.visible]="isInvalid('name')">*</span></label>
           <input id="name" type="text" formControlName="name" />
           @if (addProductForm.get('name')?.touched) {
             <div class="errors">
@@ -55,20 +76,13 @@
           }
         </div>
 
-        <div class="field" [class.invalid]="isInvalid('logo')">
-          <label for="logo">Logo <span class="required">*</span></label>
-          <input id="logo" type="text" formControlName="logo" />
-          @if (addProductForm.get('logo')?.touched) {
-            <div class="errors">
-              @if (addProductForm.get('logo')?.hasError('required')) {
-                <span>Campo requerido.</span>
-              }
-            </div>
-          }
+        <div class="field">
+          <label for="logo">Logo (opcional)</label>
+          <input id="logo" type="text" formControlName="logo" placeholder="https://ejemplo.com/logo.png" />
         </div>
 
         <div class="field" [class.invalid]="isInvalid('date_release')">
-          <label for="date_release">Fecha de liberación <span class="required">*</span></label>
+          <label for="date_release">Fecha de liberación <span class="required" [class.visible]="isInvalid('date_release')">*</span></label>
           <input id="date_release" type="date" formControlName="date_release" />
           @if (addProductForm.get('date_release')?.touched) {
             <div class="errors">
@@ -83,7 +97,7 @@
         </div>
 
         <div class="field" [class.invalid]="dateRevisionInvalid">
-          <label for="date_revision">Fecha de revisión <span class="required">*</span></label>
+          <label for="date_revision">Fecha de revisión <span class="required" [class.visible]="dateRevisionInvalid">*</span></label>
           <input id="date_revision" type="date" formControlName="date_revision" readonly />
           @if (dateRevisionInvalid) {
             <div class="errors">
@@ -94,14 +108,21 @@
       </div>
 
       <div class="actions">
-        @if (!isEdit()) {
-          <button type="reset" class="btn-secondary" (click)="resetForm()">
-            Reiniciar
+        <div class="actions-left">
+          @if (!isEdit()) {
+            <button type="reset" class="btn-secondary" (click)="resetForm()">
+              Reiniciar
+            </button>
+          }
+          <button type="button" class="btn-secondary" (click)="goBack()">
+            ← Regresar
           </button>
-        }
-        <button type="submit" class="btn-primary">
-          {{ isEdit() ? 'Guardar' : 'Enviar' }}
-        </button>
+        </div>
+        <div class="actions-right">
+          <button type="submit" class="btn-primary" [disabled]="!addProductForm.valid">
+            {{ isEdit() ? 'Guardar' : 'Enviar' }}
+          </button>
+        </div>
       </div>
 
       @if (submitError()) {

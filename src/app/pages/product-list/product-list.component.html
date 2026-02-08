@@ -56,7 +56,13 @@
             @for (product of vm().products; track product.id) {
               <tr>
                 <td>
-                  <img [src]="product.logo" [alt]="product.name" class="logo" />
+                  @if (product.logo) {
+                    <img [src]="product.logo" [alt]="product.name" class="logo" />
+                  } @else {
+                    <div class="logo-placeholder">
+                      {{ getInitials(product.name) }}
+                    </div>
+                  }
                 </td>
                 <td class="strong">{{ product.name }}</td>
                 <td>{{ product.description }}</td>
@@ -65,6 +71,7 @@
                 <td class="actions-cell">
                   <app-action-menu
                     [product]="product"
+                    [isLastRow]="$last"
                     (editProduct)="goToProductDetail($event)"
                     (deleteProduct)="confirmDeleteProduct(product)"
                   />
@@ -77,7 +84,38 @@
               <td colspan="6">
                 <div class="table-footer">
                   <span>{{ vm().total }} Resultados</span>
-                  <div class="footer-controls">
+                  <div class="pagination-controls">
+                    @if (vm().totalPages > 1) {
+                      <div class="pagination">
+                        <button 
+                          class="pagination-btn" 
+                          [disabled]="vm().currentPage === 1"
+                          (click)="onPageChange(vm().currentPage - 1)"
+                        >
+                          ←
+                        </button>
+                        @for (page of getPages(); track page) {
+                          @if (page === -1) {
+                            <span class="pagination-ellipsis">...</span>
+                          } @else {
+                            <button 
+                              class="pagination-btn"
+                              [class.active]="page === vm().currentPage"
+                              (click)="onPageChange(page)"
+                            >
+                              {{ page }}
+                            </button>
+                          }
+                        }
+                        <button 
+                          class="pagination-btn"
+                          [disabled]="vm().currentPage === vm().totalPages"
+                          (click)="onPageChange(vm().currentPage + 1)"
+                        >
+                          →
+                        </button>
+                      </div>
+                    }
                     <label>
                       Mostrar
                       <select
