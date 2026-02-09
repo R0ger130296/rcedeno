@@ -1,6 +1,11 @@
 <div class="page">
   <header class="page__header">
-    <app-brand></app-brand>
+    <div class="header-top">
+      <button type="button" class="back-button" (click)="goBack()" aria-label="Regresar">
+        ←
+      </button>
+      <app-brand></app-brand>
+    </div>
   </header>
 
   <section class="card">
@@ -114,9 +119,6 @@
               Reiniciar
             </button>
           }
-          <button type="button" class="btn-secondary" (click)="goBack()">
-            ← Regresar
-          </button>
         </div>
         <div class="actions-right">
           <button type="submit" class="btn-primary" [disabled]="!addProductForm.valid">

@@ -1,23 +1,19 @@
-:root {
-  --brand-color: #1c2c5a;
-}
-
 .brand {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  color: var(--brand-color);
+  justify-content: center;
+  gap: 8px;
 }
 
 .brand__icon {
-  width: 30px;
-  height: 30px;
-  fill: var(--primary-600);
+  width: 28px;
+  height: 28px;
 }
 
 .brand__title {
-  margin: 0;
-  font-size: 24px;
-  letter-spacing: 0.08em;
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
   font-weight: 700;
+  letter-spacing: 1px;
+  color: #1f3b64; /* azul corporativo */
 }

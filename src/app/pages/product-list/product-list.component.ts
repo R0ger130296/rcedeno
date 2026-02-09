@@ -190,7 +190,7 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  protected getInitials(name: string): string {
+protected getInitials(name: string): string {
     if (!name) return '?';
     const words = name.trim().split(/\s+/);
     
@@ -199,5 +199,17 @@ export class ProductListComponent implements OnInit {
     }
     
     return words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+  }
+
+  protected onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    
+    // Create initials placeholder
+    const placeholder = document.createElement('div');
+    placeholder.className = 'logo-placeholder';
+    placeholder.textContent = this.getInitials(img.alt);
+    
+    img.parentNode?.replaceChild(placeholder, img);
   }
 }

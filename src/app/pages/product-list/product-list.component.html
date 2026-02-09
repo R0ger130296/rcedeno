@@ -43,21 +43,37 @@
             </tr>
           </thead>
           <tbody>
-            @if (vm().loading) {
-              <tr>
-                <td colspan="6">
-                  @for (_ of [1, 2, 3, 4, 5]; track $index) {
-                    <div class="skeleton-row"></div>
-                  }
-                </td>
-              </tr>
+@if (vm().loading) {
+              @for (_ of [1, 2, 3, 4, 5]; track $index) {
+                <tr class="skeleton-row">
+                  <td>
+                    <div class="skeleton skeleton-logo"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton skeleton-text"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton skeleton-text skeleton-text-long"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton skeleton-text"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton skeleton-text"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton skeleton-actions"></div>
+                  </td>
+                </tr>
+              }
             }
 
             @for (product of vm().products; track product.id) {
               <tr>
                 <td>
-                  @if (product.logo) {
-                    <img [src]="product.logo" [alt]="product.name" class="logo" />
+@if (product.logo && product.logo.trim()) {
+                    <img [src]="product.logo" [alt]="product.name" class="logo" 
+                         (error)="onImageError($event)" />
                   } @else {
                     <div class="logo-placeholder">
                       {{ getInitials(product.name) }}

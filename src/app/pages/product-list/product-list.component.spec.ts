@@ -65,45 +65,45 @@ describe('ProductListComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should load products on init', () => {
+it('should load products on init', () => {
     apiSpy.getProducts.and.returnValue(of({ data: products }));
     fixture.detectChanges();
     expect(apiSpy.getProducts).toHaveBeenCalled();
-    expect((component as any).products().length).toBe(2);
+    expect((component as any).vm().products.length).toBe(2);
   });
 
-  it('should handle load error', () => {
+it('should handle load error', () => {
     apiSpy.getProducts.and.returnValue(throwError(() => new Error('fail')));
     fixture.detectChanges();
-    expect(component['error']()).toContain('No se pudieron cargar');
+    expect((component as any).error()).toContain('No se pudieron cargar');
   });
 
-  it('should delete product and update list', async () => {
+it('should delete product and update list', async () => {
     apiSpy.getProducts.and.returnValue(of({ data: products }));
     apiSpy.deleteProduct.and.returnValue(of({}));
     fixture.detectChanges();
-    component['products'].set(products);
+    (component as any).products.set(products);
     (component as any).confirmDeleteProduct(products[0]);
     await (component as any).confirmDelete();
     expect(apiSpy.deleteProduct).toHaveBeenCalledWith('1');
     expect((component as any).products().length).toBe(1);
   });
 
+it('should handle delete error', async () => {
+    apiSpy.getProducts.and.returnValue(of({ data: products }));
+    apiSpy.deleteProduct.and.returnValue(throwError(() => new Error('fail')));
+    fixture.detectChanges();
+    (component as any).products.set(products);
+    (component as any).confirmDeleteProduct(products[0]);
+    await (component as any).confirmDelete();
+    expect((component as any).deleteError()).toContain('No se pudo eliminar');
+  });
+
   it('should filter by search term', () => {
     apiSpy.getProducts.and.returnValue(of({ data: products }));
     fixture.detectChanges();
     (component as any).onSearch('Uno');
-    expect(component['filteredProducts']().length).toBe(1);
-    expect(component['filteredProducts']()[0].id).toBe('1');
-  });
-
-  it('should handle delete error', async () => {
-    apiSpy.getProducts.and.returnValue(of({ data: products }));
-    apiSpy.deleteProduct.and.returnValue(throwError(() => new Error('fail')));
-    fixture.detectChanges();
-    component['products'].set(products);
-    (component as any).confirmDeleteProduct(products[0]);
-    await (component as any).confirmDelete();
-    expect(component['deleteError']()).toContain('No se pudo eliminar');
+    expect((component as any).vm().products.length).toBe(1);
+    expect((component as any).vm().products[0].id).toBe('1');
   });
 });

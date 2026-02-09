@@ -11,11 +11,13 @@ describe('AddProductComponent', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    productServiceSpy = jasmine.createSpyObj('ProductService', [
+productServiceSpy = jasmine.createSpyObj('ProductService', [
       'addProduct',
       'updateProduct',
       'getProducts',
+      'verifyProductId',
     ]);
+    productServiceSpy.verifyProductId.and.returnValue(of(false));
     routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
 
     await TestBed.configureTestingModule({
@@ -48,7 +50,7 @@ describe('AddProductComponent', () => {
     expect(component.addProductForm.get('date_revision')?.touched).toBeTrue();
   });
 
-  it('should call addProduct on valid create submit', async () => {
+it('should call addProduct on valid create submit', async () => {
     const dto = {
       id: 'new',
       name: 'Producto Uno',
@@ -58,13 +60,19 @@ describe('AddProductComponent', () => {
       date_revision: '2027-02-20',
     };
     productServiceSpy.addProduct.and.returnValue(of(dto as any));
+    productServiceSpy.verifyProductId.and.returnValue(of(false));
+    
     component.addProductForm.patchValue({
+      id: 'new',
       name: 'Producto Uno',
       description: 'Descripcion valida',
       logo: 'http://logo.com',
       date_release: '2026-02-20',
     });
     component.addProductForm.get('date_revision')?.setValue('2027-02-20');
+    
+    fixture.detectChanges();
+    await fixture.whenStable();
 
     await component.onSubmit();
 
@@ -72,15 +80,21 @@ describe('AddProductComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['']);
   });
 
-  it('should set submitError when api fails', async () => {
+it('should set submitError when api fails', async () => {
     productServiceSpy.addProduct.and.returnValue(throwError(() => new Error('fail')));
+    productServiceSpy.verifyProductId.and.returnValue(of(false));
+    
     component.addProductForm.patchValue({
+      id: 'test',
       name: 'Producto Uno',
       description: 'Descripcion valida',
       logo: 'http://logo.com',
       date_release: '2026-02-20',
     });
     component.addProductForm.get('date_revision')?.setValue('2027-02-20');
+    
+    fixture.detectChanges();
+    await fixture.whenStable();
 
     await component.onSubmit();
 
