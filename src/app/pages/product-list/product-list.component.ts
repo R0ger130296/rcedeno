@@ -3,12 +3,11 @@ import {
   Component,
   OnInit,
   computed,
-  effect,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ActionMenuComponent } from '../../components/action-menu/action-menu.component';
 import { ProductDTO } from '../../models/product.dto';
@@ -21,7 +20,6 @@ import { BrandComponent } from '../../components/brand/brand.component';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
   imports: [
-    CommonModule,
     FormsModule,
     ActionMenuComponent,
     BrandComponent,
@@ -46,7 +44,7 @@ export class ProductListComponent implements OnInit {
   private readonly filteredFull = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     if (!term) return this.products();
-    
+
     return this.products().filter(p =>
       p.name.toLowerCase().includes(term) ||
       p.description.toLowerCase().includes(term) ||
@@ -61,7 +59,7 @@ export class ProductListComponent implements OnInit {
     return this.filteredFull().slice(start, start + size);
   });
 
-  private readonly totalPages = computed(() => 
+  private readonly totalPages = computed(() =>
     Math.ceil(this.filteredFull().length / this.pageSize())
   );
 
@@ -137,7 +135,7 @@ export class ProductListComponent implements OnInit {
     if (!product) return;
     try {
       this.loading.set(true);
-      await this.api.deleteProduct(product.id).toPromise();
+      await firstValueFrom(this.api.deleteProduct(product.id));
       this.products.update((list) => list.filter((p) => p.id !== product.id));
       this.deleteError.set(null);
       this.toast.show('Producto eliminado', 'success');
@@ -193,23 +191,23 @@ export class ProductListComponent implements OnInit {
 protected getInitials(name: string): string {
     if (!name) return '?';
     const words = name.trim().split(/\s+/);
-    
+
     if (words.length === 1) {
       return words[0].substring(0, 2).toUpperCase();
     }
-    
+
     return words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
   }
 
   protected onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.style.display = 'none';
-    
+
     // Create initials placeholder
     const placeholder = document.createElement('div');
     placeholder.className = 'logo-placeholder';
     placeholder.textContent = this.getInitials(img.alt);
-    
+
     img.parentNode?.replaceChild(placeholder, img);
   }
 }

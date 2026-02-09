@@ -18,6 +18,7 @@ import {
   ValidatorFn,
   AsyncValidatorFn,
 } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDTO } from '../../models/product.dto';
 import { ProductService } from '../../services/product.services';
@@ -163,9 +164,9 @@ export class AddProductComponent implements OnInit {
       };
       try {
         if (this.isEdit()) {
-          await this.api.updateProduct(productData.id, productData).toPromise();
+          await firstValueFrom(this.api.updateProduct(productData.id, productData));
         } else {
-          await this.api.addProduct(productData).toPromise();
+          await firstValueFrom(this.api.addProduct(productData));
         }
         this.router.navigate(['']);
       } catch (error) {
@@ -222,8 +223,8 @@ export class AddProductComponent implements OnInit {
     return (control: AbstractControl): Promise<ValidationErrors | null> => {
       if (!control.value || this.isEdit()) return Promise.resolve(null);
 
-      return this.api.verifyProductId(control.value).toPromise()
-        .then(exists => exists ? { idExists: true } : null)
+      return firstValueFrom(this.api.verifyProductId(control.value))
+        .then((exists) => (exists ? { idExists: true } : null))
         .catch(() => null);
     };
   }

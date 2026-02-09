@@ -73,7 +73,7 @@ it('should generate unique IDs for toasts', () => {
     const initialLength = service.toasts().length;
     service.dismiss('non-existent-id');
 
-    expect(service.toasts()).toHaveLength(initialLength);
+    expect(service.toasts().length).toBe(initialLength);
   });
 
   it('should support all toast tones', () => {
@@ -84,31 +84,31 @@ it('should generate unique IDs for toasts', () => {
     });
 
     const toasts = service.toasts();
-    expect(toasts).toHaveLength(3);
+    expect(toasts.length).toBe(3);
 
     toasts.forEach((toast, index) => {
       expect(toast.tone).toBe(tones[index]);
     });
   });
 
-  it('should auto-dismiss after default duration', (done) => {
+it('should auto-dismiss after default duration', (done) => {
     service.show('Auto dismiss test');
-
-    expect(service.toasts()).toHaveLength(1);
-
+    
+    expect(service.toasts().length).toBe(1);
+    
     setTimeout(() => {
-      expect(service.toasts()).toHaveLength(0);
+      expect(service.toasts().length).toBe(0);
       done();
     }, 2600); // 2500 default + 100ms buffer
   });
 
-  it('should create proper toast message structure', () => {
+it('should create proper toast message structure', () => {
     service.show('Test', 'success');
-
+    
     const toast = service.toasts()[0];
-    expect(toast).toHaveProperty('id');
-    expect(toast).toHaveProperty('text', 'Test');
-    expect(toast).toHaveProperty('tone', 'success');
+    expect(toast.id).toBeDefined();
+    expect(toast.text).toBe('Test');
+    expect(toast.tone).toBe('success');
     expect(typeof toast.id).toBe('string');
     expect(toast.id.length).toBeGreaterThan(0);
   });

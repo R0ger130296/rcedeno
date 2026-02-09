@@ -2,10 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
-  input,
-  output,
   computed,
   signal,
+  input,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductDTO } from '../../models/product.dto';
